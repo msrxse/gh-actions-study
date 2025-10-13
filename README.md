@@ -16,3 +16,35 @@ jobs:  // this workflow has one job and one step
     steps:
       - run: echo "Hello World"
 ```
+
+## Triggering events
+
+- Trigger manually
+- Push to branch
+- create/update pull request
+- Cron schedule
+- many more...
+
+## Environment variables
+
+Env variables can be scoped to within the whole workflow, job or step. See .github/workflows/03-core-features--05-environment-variables.yaml
+
+- Passing data is achieved with "outputs"
+  By default, jobs run on insulated environments, so environment variables and outputs don't automatically persist in between jobs.
+
+1. Use Step output ($GITHUB_OUTPUT) - this is workflow scoped
+2. Job-scoped environment variable ($GITHUB_ENV)
+
+See .github/workflows/03-core-features--06-passing-data.yaml
+
+## Secrets and variables
+
+- You can store these at the organization, repository or environment (staging vs prod) levels.
+- See github >> Settings >> secrets and variables >> Actions
+
+## About context
+
+Context is the nameSpace that contains information you can access within your workflow, things like the current branch,commit message, event payload, job outputs, secrets, etc.
+
+- When you see ${{ ... }}, that’s an expression using a context. Eg, ${{ github.repository }} → user/repo
+  (also env,job,steps,needs,secretes,number,strategy,matrix,input)
