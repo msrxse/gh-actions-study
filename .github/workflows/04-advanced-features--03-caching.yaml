@@ -31,6 +31,7 @@ jobs:
       # Save cache only if we generated new content
       - name: Save cache
         if: steps.demo-cache.outputs.cache-hit != 'true'
+        # tells GitHub to use a prebuilt action. comes from the official actions/setup-node repo.
         uses: actions/cache@638ed79f9dc94c1de1baef91bcab5edaa19451f4 # v4.2.4
         with:
           path: demo-cache
