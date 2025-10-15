@@ -143,3 +143,54 @@ Advanced scheduling features help you orchestrate complex automation without dup
 - Matrix jobs: fan out a single job definition across multiple inputs—useful for testing on different operating systems, language versions, or dependency sets.
 - Conditionals: (if: expressions) control whether a step or job should run for a particular matrix combination or based on data from previous steps.
 - Concurrency groups: instruct GitHub Actions to cancel superseded runs so you aren't burning time on outdated builds.
+
+# 5. Marketplace actions
+
+- The github actions contains reusable building blocks that can help your automation workflows. (http://www.github.com/marketplace?type=actions)
+- Most actions are small applications tha you invoke from a uses: step inside your workflow.
+- Pin specific commits for security. Tags can be re-targeted after publication, but commit hashes are immutable.
+
+## Popular actions:
+
+Official Github actions:
+
+- actions/checkout: clone your repository into the runner.
+- actions/cache: persist dependencies or build outputs between runs.
+- actions/upload-artifact and actions/download-artifact: move build artifacts across jobs.
+- actions/github-script: run short JS snippets authenticated against the github API.
+
+Runtime and dependency installers
+
+- actions/setup-node
+
+Authentication helpers
+
+- aws-actions/configure-aws-credentials
+
+Additional utilities
+
+- github/super-linter: run language-agnostic linting in one step.
+- docker/build-push-action: build and publish multi-architecture container images.
+
+# 6. Avoiding duplication
+
+Github gives us several ways to reuse custom automation between jobs, workflows and repositories.
+
+## composite actions
+
+Composite actions allow you to collect a series of **workflow job steps** into a single **action** which you can then run as a single job step in multiple workflows.
+[See docs](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action)
+
+## reusable workflows
+
+Avoid duplication when creating a workflow by reusing existing workflows.
+[See](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
+
+## JavaScript/TypeScript action
+
+Rich logic with tight GitHub integration. Runs as a step with Node.js runtime.
+You can import @actions/core to read inputs, emit logs, set outputs, or fail the run.
+
+## container actions
+
+Container actions let you pick any runtime or dependency stack. GitHub can build the image from a local Dockerfile, or you can point to a registry-hosted image to avoid rebuilding on every run.
