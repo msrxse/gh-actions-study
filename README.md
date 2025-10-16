@@ -179,18 +179,91 @@ Github gives us several ways to reuse custom automation between jobs, workflows 
 ## composite actions
 
 Composite actions allow you to collect a series of **workflow job steps** into a single **action** which you can then run as a single job step in multiple workflows.
-[See docs](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action)
+[See docs: reuse workflow steps](https://docs.github.com/en/actions/tutorials/create-actions/create-a-composite-action)
 
 ## reusable workflows
 
 Avoid duplication when creating a workflow by reusing existing workflows.
-[See](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
+[See docs: reuse workflows](https://docs.github.com/en/actions/how-tos/reuse-automations/reuse-workflows)
 
 ## JavaScript/TypeScript action
 
 Rich logic with tight GitHub integration. Runs as a step with Node.js runtime.
 You can import @actions/core to read inputs, emit logs, set outputs, or fail the run.
+"npm run bundle"
 
 ## container actions
 
 Container actions let you pick any runtime or dependency stack. GitHub can build the image from a local Dockerfile, or you can point to a registry-hosted image to avoid rebuilding on every run.
+
+# 7. Common workflows
+
+## Validate
+
+### Lint
+
+1. **Checkout the repository code**
+2. **Install linter**
+3. **Run linter**
+
+Improvements: See [super-lint](https://github.com/marketplace/actions/super-linter)
+
+1. **Checkout the repository code**
+2. **Install linter**
+3. Determine which files you have changed or created
+4. **Run linter on changed files**
+5. Report status (summary, pull request comment or status checks)
+6. Cache the linting tool to avoid paying the setup cost on every run
+
+### Test
+
+1. **Checkout the repository code**
+2. **Install the language runtime**
+3. **Download dependencies**
+4. **Build application**
+5. **Runs the test suite**
+
+Improvements: To setup toolchain, see [setup-node](https://github.com/actions/setup-node) (only 2,3,4 and 8)
+
+1. **Checkout the repository code**
+2. **Install the language runtime**
+3. Setup caching
+4. Restore from cache
+5. **Download** (uncached) **dependencies**
+6. **Build application**
+7. **Runs the test suite**
+8. Store test results in cache
+9. Upload test results as artifact
+10. Report status
+
+### Static analysis
+
+- Runs queries to find common code vulnerabilities
+
+1. **Checkout the repository code**
+2. **Install analysis tool**
+3. **Run analysis tool**
+4. Upload test results to Github and can be displayed in security tab
+
+## Build
+
+Build workflows extend the testing pipeline by producing deployable outputs.
+
+## Deploy
+
+Most deployment workflows start where the build leaves off—using the packaged artifact and promoting it into an environment.
+
+## Repo automations
+
+- [See release-please](https://github.com/marketplace/actions/release-please-action)
+
+- Release-please automates CHANGELOG generation, the creation of GitHub releases, and version bumps for your projects. Release Please does so by parsing your git history, looking for [Conventional Commit](https://www.conventionalcommits.org/en/v1.0.0/) messages (see \* below), and creating release PRs.
+
+- What's a Release PR?
+  - Rather than continuously releasing what's landed to your default branch, release-please maintains Release PRs. These Release PRs are kept up-to-date as additional work is merged. When you're ready to tag a release, simply merge the release PR.
+
+\* How should I write my commits? Release Please assumes you are using Conventional Commit messages.The most important prefixes:fix, feat, feat!:, or fix!:, refactor!: (breaking changes indicated by the !)
+
+## Notes
+
+- Under the actions tab in github theres a series of suggested workflows you can start with.
