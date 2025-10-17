@@ -267,3 +267,32 @@ Most deployment workflows start where the build leaves off—using the packaged 
 ## Notes
 
 - Under the actions tab in github theres a series of suggested workflows you can start with.
+
+# 8. Developer experience
+
+## For local actions
+
+- A local action is simply one action stored inside your own repo under .github/actions/your-action-name/. This means it’s not published — it’s just used by workflows in the same repository.
+
+- [@github/local-action](https://github.com/github/local-action) Runs custom GitHub Actions locally and test them in Visual Studio Code. Now you don't need to push dummy changes and wait for runners to test/debug your actions. You can also run tests on them.
+
+## On Workflows
+
+-Fist technique:Pull logic out of workflow files into a separate location withing my repo. This way rather than needing to push a change and execute it, i can iterate much more quiclly on my local system. For example inline bash scripts within your YAML, instead you can exatch to, for example, a task file. Now from the workflow you can call this task
+
+1. **Checkout**
+2. **Install task because is not available by default**
+3. **Execute that task**
+
+- 2nd technique: Test the workflow as a whole. You can run Workflows locally with [act](https://github.com/nektos/act). Rather than having to commit/push every time you want to test out the changes you are making to your .github/workflows/ files, you can use act to run the actions locally.
+
+## Debugging and Observability
+
+- Turn up the logging: GitHub exposes debug channels that are hidden by default. Toggling **ACTIONS_STEP_DEBUG** and **ACTIONS_RUNNER_DEBUG** to true at the repository level surfaces additional logs from both your steps and the runner itself.
+- To add these variables:
+  `Settings >> Secret and variables >> and add new variable ACTIONS_STEP_DEBUG=true` Could also be a secret - now you will get additional debug logs on the steps output console.
+- The **ACTIONS_RUNNER_DEBUG** will create additional runner diagnostic logs you can download. Tons of info from the runner itself.
+
+- [otel-cicd-action](https://github.com/corentinmusard/otel-cicd-action) + Honeycomb. This action exports Github CI/CD workflows to any endpoint compatible with OpenTelemetry, for example Honeycomb. In Honeycomb you can see how long each workflow/step lasts and where exactly time was expend.
+
+# 9. Best Practices
