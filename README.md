@@ -296,3 +296,70 @@ Most deployment workflows start where the build leaves off—using the packaged 
 - [otel-cicd-action](https://github.com/corentinmusard/otel-cicd-action) + Honeycomb. This action exports Github CI/CD workflows to any endpoint compatible with OpenTelemetry, for example Honeycomb. In Honeycomb you can see how long each workflow/step lasts and where exactly time was expend.
 
 # 9. Best Practices
+
+## Measure performance first
+
+- Measure the performance before trying to optimize anything. It doesn't make any sense to try to optimize something if there's no way for you to tell if that optimization actually improved he state of things.
+- A good way to measure this is to export that data to some 3rd party platform that you ca use to analyze the data and see what is taking the most time which will inform your decision about where to invest your efforts.
+
+## Wait less
+
+- **Reduce runner queueing**: Ensure you have sufficient capacity (hosted or managed) so jobs start quickly.
+- **Fail fast**: Order the most failure-prone tests first so developers get feedback before a long job fails near the end.
+
+## Try doing less
+
+- **Conditional filters**: Don't execute things unless they are actually necessary. You can use conditional filters to inly run workflows, jobs or steps when the relevant code changes withing the repo.
+- **Caching**: And you can use caching to avoid repeating work that was done in a previous execution.
+
+## Improve resource utilization
+
+- **Parallelize**: This could mean splitting work across jobs so they can run in parallel, splitting a job so it can run across the multiple cores that your runner may have.
+- ** Avoid emulation** where possible: QEMU is an emulation technology that allows you to build apps for a diff architecture that you are running on. Building for the same architecture will always be more efficient.
+
+## Prevent slowdowns
+
+- Once you start improving performance, keep tracking the metrics. Feature work will inevitably add more tests and build steps; monitor timings so you can respond before slowdowns become a bottleneck.
+
+## Caching
+
+Caching is one of the most effective tools for speeding up runs. Depending on your stack, consider layering several of these techniques:
+
+- **Git checkout cache**: Store a recent copy of the repository so actions/checkout only needs to fetch a small delta each run.
+- **Language toolchains**: If you install a custom version of Node, Go, Java, etc., cache the toolchain to skip repeated downloads.
+- **Dependencies**: Cache package manager directories (npm, pip, cargo, etc.) so you are not pulling dependencies over the public internet every time.
+- **Build and test artifacts**: Persist compiled assets or expensive test fixtures when their size makes sense.
+- **Container layers**: Keep base images hot, reuse unchanged layers, and use cache mounts to expose dependency caches inside Docker builds.
+
+## Maintainability
+
+### Mono vs multi-repo considerations
+
+- Both repository strategies can support high-quality automation, but the trade-offs differ. Use these to decide what to optimize in your environment.
+- Mono-repo: Best for workflow reuse, discoverability and artifacts/hand-offs
+- Multi-repo: Best for selective execution, caching, permissions and secretes,auditing and ownership.
+
+### Use a single task runner or build tool
+
+- Choose a single entry point for each service (for example Task, make, or Bazel)
+
+### Define a standard CI API.
+
+- Expose a predictable set of commands such as install, test, build, and dev. When every repository follows the same contract, your GitHub Actions can call those targets without knowing internal details, and developers onboard more quickly.
+
+### Avoid duplication by using Composite Actions and/or reusable Workflows
+
+- Reuse composite actions and reusable workflows instead of copying YAML between projects. This keeps behavior consistent and makes it obvious where to update a shared behavior.
+
+### Optimize local feedback loops
+
+- Pair your CI configuration with local tooling (as shown in module 8) so developers can run the exact same commands before pushing. This shortens the fix/verify loop and reduces noisy workflow runs.
+
+## Security
+
+- Grant the minimum permissions necessary for each workflow or job.
+- Favor short-lived tokens over long-lived credentials whenever possible.
+- Maintain an allow list of approved marketplace actions.
+- Pin marketplace actions by commit SHA to guarantee repeatable builds.
+- Do not let forked pull requests run on self-hosted runners; otherwise, attackers could exfiltrate secrets or tamper with the host.
+- Use GitHub environments to require manual approvals before sensitive deployments (such as production) execute.
